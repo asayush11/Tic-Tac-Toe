@@ -8,7 +8,7 @@ public class TicTacToe {
 
     private final Board board;
     private final Deque<Player> players;
-    private static TicTacToe instance;
+    private static volatile TicTacToe instance;
 
     private TicTacToe() {
         this.board = new Board();
@@ -20,7 +20,11 @@ public class TicTacToe {
 
     public synchronized static TicTacToe getInstance() {
         if(instance == null) {
-            instance = new TicTacToe();
+            synchronized (TicTacToe.class){
+                if(instance == null){
+                    instance = new TicTacToe();
+                }
+            }
         }
         return instance;
     }
